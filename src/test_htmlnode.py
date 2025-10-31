@@ -31,3 +31,10 @@ class TestHtmlNode(unittest.TestCase):
                         {"cite": "https://www.boot.dev"})
         self.assertEqual(node.to_html(), "<blockquote>A LeafNode is a type of HTMLNode that represents a single HTML tag with no children. For example, a simple <p> tag with some text inside of it</blockquote>")
         
+    def test_leaf_to_html_no_value(self):
+        node = LeafNode("p", None)
+        self.assertRaises(ValueError, node.to_html)
+        
+    def test_leaf_to_html_no_tag(self):
+        node = LeafNode(None, "Hello world")
+        self.assertEqual(node.to_html(), "Hello world")
