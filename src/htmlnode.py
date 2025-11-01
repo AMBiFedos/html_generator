@@ -1,3 +1,13 @@
+from enum import Enum
+
+class HtmlTag(Enum):
+    BOLD = "b"
+    ITALIC = "i"
+    CODE = "code"
+    LINK = "a"
+    IMAGE = "img"
+
+
 class HtmlNode():
     def __init__(self, tag = None, value = None, children = None, props = None):
         self.tag = tag
