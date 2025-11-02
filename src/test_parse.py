@@ -1,5 +1,5 @@
 import unittest
-from parse import text_node_to_html_node, split_nodes_delimiter
+from parse import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 from textnode import TextNode, TextType
 from htmlnode import LeafNode
 
@@ -46,6 +46,31 @@ class TestParse(unittest.TestCase):
         node = TextNode("This is text with a `code block word", TextType.TEXT)
         with self.assertRaises(ValueError):
             split_nodes_delimiter([node], "`", TextType.CODE)
+            
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+        
+    def test_extract_markdown_links(self):
+        matches = extract_markdown_links(
+            "This is text with a [link](https://www.boot.dev)"
+        )
+        self.assertListEqual([("link", "https://www.boot.dev")], matches)
+    
+    def test_extract_matches_links_excl_images(self):
+        matches = extract_markdown_links(
+            "This is text with a [link](https://www.boot.dev) and an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("link", "https://www.boot.dev")], matches)
+
+    def test_extract_matches_images_excl_links(self):
+        matches = extract_markdown_images(
+            "This is text with a [link](https://www.boot.dev) and an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
 
 if __name__ == "__main__":
     unittest.main()
