@@ -71,6 +71,29 @@ class TestParse(unittest.TestCase):
         )
         self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
 
+    def test_extract_markdown_images_mult(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and a ![second image](https://i.imgur.com/3elNhQu.png)"
+        )
+        self.assertListEqual(
+            [
+                ("image", "https://i.imgur.com/zjjcJKZ.png"), 
+                ("second image", "https://i.imgur.com/3elNhQu.png")
+            ],
+        matches)
+
+    def test_extract_markdown_images_mult(self):
+        matches = extract_markdown_images(
+            "This is text with a ![link](https://www.google.com) and a ![second link](https://www.boot.dev)"
+        )
+        self.assertListEqual(
+            [
+                ("link", "https://www.google.com"), 
+                ("second link", "https://www.boot.dev")
+            ],
+        matches)
+
+
 
 if __name__ == "__main__":
     unittest.main()
