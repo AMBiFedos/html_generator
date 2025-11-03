@@ -1,5 +1,5 @@
 import unittest
-from parse import *
+from markdown import *
 from textnode import TextNode, TextType
 from htmlnode import LeafNode
 
@@ -105,8 +105,7 @@ class TestParse(unittest.TestCase):
                 TextNode("This is text with an ", TextType.TEXT),
                 TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
                 TextNode(" and another ", TextType.TEXT),
-                TextNode(
-                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
+                TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
                 ),
             ],
             new_nodes,
@@ -125,6 +124,22 @@ class TestParse(unittest.TestCase):
             new_nodes,
         )
 
+    def test_split_images_with_link(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://www.google.com)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and a [link](https://www.google.com)", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+
+
     def test_split_links(self):
         node = TextNode(
             "This is text with a [link](https://www.boot.dev) and another [second link](https://www.google.com)",
@@ -136,9 +151,7 @@ class TestParse(unittest.TestCase):
                 TextNode("This is text with a ", TextType.TEXT),
                 TextNode("link", TextType.LINK, "https://www.boot.dev"),
                 TextNode(" and another ", TextType.TEXT),
-                TextNode(
-                    "second link", TextType.LINK, "https://www.google.com"
-                ),
+                TextNode("second link", TextType.LINK, "https://www.google.com"),
             ],
             new_nodes,
         )
@@ -161,21 +174,21 @@ class TestParse(unittest.TestCase):
         text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
         
         nodes = text_to_text_nodes(text)
-        # self.assertListEqual(
-        #     [
-        #         TextNode("This is ", TextType.TEXT),
-        #         TextNode("text", TextType.BOLD),
-        #         TextNode(" with an ", TextType.TEXT),
-        #         TextNode("italic", TextType.ITALIC),
-        #         TextNode(" word and a ", TextType.TEXT),
-        #         TextNode("code block", TextType.CODE),
-        #         TextNode(" and an ", TextType.TEXT),
-        #         TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
-        #         TextNode(" and a ", TextType.TEXT),
-        #         TextNode("link", TextType.LINK, "https://boot.dev"),
-        #     ],
-        #     nodes,
-        # )
+        self.assertListEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+            nodes,
+        )
 
 
 if __name__ == "__main__":
