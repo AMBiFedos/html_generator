@@ -1,3 +1,6 @@
+import os
+import shutil
+
 def main():
     print("Hello from html-generator!")
 
