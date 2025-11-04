@@ -1,12 +1,9 @@
 from textnode import TextNode, TextType
-from htmlnode import LeafNode
+
 
 def main():
-    text_node = TextNode("Lorem Ipsum", TextType.TEXT, "https://www.boot.dev")
-    print(text_node)
-    
+    node = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
+    print(node)
 
 
-
-if __name__ == "__main__":
-    main()
+main()
